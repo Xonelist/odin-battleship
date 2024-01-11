@@ -7,14 +7,63 @@ class Board {
 class Player {
     constructor(name) {
         this.name = name;
-        this.collection = null;
+        this.collection = [];
+        this.board = null;
     }
+
+    addShip(type, x, y, face) {
+        let ship = null;
+        switch (type) {
+            case 'P':
+                ship = new PatrolBoat(this.name)
+                break;
+            
+            case 'S':
+                ship = new Submarine(this.name)
+                break;
+
+            case 'D':
+                ship = new Destroyer(this.name)
+                break;
+            
+            case 'B':
+                ship = new Battleship(this.name)
+                break;
+            
+            case 'C':
+                ship = new Carrier(this.name)
+                break;    
+            default:
+                return 'your type input is false';
+        }
+        ship.setLocation(x, y, face)
+        console.log(ship)
+        this.collection.push(ship)
+        return this.collection
+    }
+
     setCollection () {
 
     }
-    
-    makeBoard() {
 
+    makeBoard() {
+        let board = [];
+        let sizeOfBoard = 10;
+        for (let y = 0; y < sizeOfBoard; y++) {
+            let yboard = []
+            for (let x = 0; x < sizeOfBoard; x++) {
+                yboard.push([])
+                
+            }
+            board.push(yboard)
+        }
+
+        if(this.collection === null) return null
+        this.collection.forEach(ship => {
+            ship.location.forEach(coordinate => {
+                board[coordinate[0]][coordinate[1]] = ship
+            });
+        });
     }
 }
 
@@ -113,4 +162,4 @@ class Carrier extends Ship {
     }
 }
 
-module.exports =  { Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier }
+module.exports =  { Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier, Player }
