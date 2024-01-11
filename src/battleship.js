@@ -9,12 +9,20 @@ class Player {
         this.name = name;
         this.collection = null;
     }
+    setCollection () {
+
+    }
+    
+    makeBoard() {
+
+    }
 }
 
 class Ship {
     constructor(player) {
         this.player = player;
         this.totalHit = 0;
+        this.location = null;
     }
 
     hit() {
@@ -26,9 +34,43 @@ class Ship {
         if(this.totalHit === this.size) {
             return `${this.player}'s ${this.shipName} is sunk`
         } else {
-            return 'Not Sinking'
+            return `${this.totalHit} / ${this.size} hits till ${this.player}'s ${this.shipName} sinking`
         }
-        
+    }
+
+    setLocation(x, y, face) {
+        if(x >= 0 && x <= 9 && y >= 0 && y <= 9) {
+            switch (face) {
+                case 'h':
+                    this.location = this.horizontal(x, y)
+                    break;
+                case 'v':
+                    this.location = this.vertical(x, y)
+                    break;
+                default:
+                    return 'not recognized input face'
+            }
+        }
+    }
+
+    horizontal(x, y) {
+        let location = [];
+        if(x + this.size < 9) {
+            for (let i = x; i < x+this.size; i++) {
+                location.push([i, y])
+            }
+        }
+        return location
+    }
+
+    vertical(x, y) {
+        let location = [];
+        if(y + this.size < 9) {
+            for (let i = y; i < y+this.size; i++) {
+                location.push([x, i])
+            }
+        }
+        return location
     }
 }
 class PatrolBoat extends Ship {
