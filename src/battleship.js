@@ -36,7 +36,6 @@ class Player {
             default:
                 return 'your type input is false';
         }
-        ship.setLocation(x, y, face)
         console.log(ship)
         this.collection.push(ship)
         return this.collection
@@ -66,41 +65,6 @@ class Ship {
         } else {
             return `${this.totalHit} / ${this.size} hits till ${this.player}'s ${this.shipName} sinking`
         }
-    }
-
-    setLocation(x, y, face) {
-        if(x >= 0 && x <= 9 && y >= 0 && y <= 9) {
-            switch (face) {
-                case 'h':
-                    this.location = this.horizontal(x, y)
-                    break;
-                case 'v':
-                    this.location = this.vertical(x, y)
-                    break;
-                default:
-                    return 'not recognized input face'
-            }
-        }
-    }
-
-    horizontal(x, y) {
-        let location = [];
-        if(x + this.size < 9) {
-            for (let i = x; i < x+this.size; i++) {
-                location.push([i, y])
-            }
-        }
-        return location
-    }
-
-    vertical(x, y) {
-        let location = [];
-        if(y + this.size < 9) {
-            for (let i = y; i < y+this.size; i++) {
-                location.push([x, i])
-            }
-        }
-        return location
     }
 }
 class PatrolBoat extends Ship {
