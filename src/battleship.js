@@ -46,25 +46,6 @@ class Player {
 
     }
 
-    makeBoard() {
-        let board = [];
-        let sizeOfBoard = 10;
-        for (let y = 0; y < sizeOfBoard; y++) {
-            let yboard = []
-            for (let x = 0; x < sizeOfBoard; x++) {
-                yboard.push([])
-                
-            }
-            board.push(yboard)
-        }
-
-        if(this.collection === null) return null
-        this.collection.forEach(ship => {
-            ship.location.forEach(coordinate => {
-                board[coordinate[0]][coordinate[1]] = ship
-            });
-        });
-    }
 }
 
 class Ship {
