@@ -1,7 +1,7 @@
 class GameBoard {
     constructor() {
         this.board = {};
-        this.Ships = null;
+        this.ships = Array();
         this.AttackedRecords = {}
     }
 
@@ -28,7 +28,10 @@ class GameBoard {
             default:
                 return false;
         }
+        this.ships.push(ship);
         this.board[`${x}, ${y}`] = ship;
+        this.board[`${x+1}, ${y}`] = ship;
+        return ship;
     }
 
     receiveAttack(x, y) {
@@ -39,6 +42,18 @@ class GameBoard {
         } else {
             return false;
         }
+    }
+
+    isAllShipSunk() {
+        if(this.ships === null) return null
+        let con = true;
+        this.ships.forEach(ship => {
+            if(!ship.isSunk()) con = false;
+        });
+
+        return con;
+
+        //return true;
     }
 }
 
