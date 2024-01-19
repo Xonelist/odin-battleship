@@ -5,32 +5,52 @@ class GameBoard {
         this.AttackedRecords = {}
     }
 
-    addShips(type, x, y) {
-        let ship;
+    addShips(type, x, y, face = 'h') {
+        
+        if(x < 0 || x > 9 || y < 0 || y > 9) return false;
         if(`${x}, ${y}` in this.board) return false;
+        let ship = this.addShip(type);
+        this.ships.push(ship);
+        
+        switch (face) {
+            case 'v':
+                return this.addShipFaceVertical(x, y, ship)
+            default:
+                return this.addShipFaceHorizontal(x, y, ship)
+                
+        }
+    }
+    addShip(type) {
         switch (type) {
             case 'P':
-                ship = new PatrolBoat()
-                break;
+                return new PatrolBoat()
             case 'S':
-                ship = new Submarine()
-                break;
+                return new Submarine()
             case 'D':
-                ship = new Destroyer()
-                break;
+                return new Destroyer()
             case 'B':
-                ship = new Battleship()
-                break;
+                return new Battleship()
             case 'C':
-                ship = new Carrier()
-                break;
-                
+                return new Carrier()
             default:
                 return false;
         }
-        this.ships.push(ship);
-        this.board[`${x}, ${y}`] = ship;
-        this.board[`${x+1}, ${y}`] = ship;
+    }
+    addShipFaceHorizontal(x, y, ship) {
+        if(x+ship.size > 9) return false;
+        for(let i = x; i < x+ship.size; i++) {
+            this.board[`${i}, ${y}`] = ship;
+        }
+
+        return ship;
+    }
+
+    addShipFaceVertical(x, y, ship) {
+        if(y+ship.size > 9) return false;
+        for(let i = y; i < y+ship.size; i++) {
+            this.board[`${x}, ${i}`] = ship;
+        }
+
         return ship;
     }
 
@@ -57,6 +77,12 @@ class GameBoard {
     }
 }
 
+class Player {
+    constructor(name) {
+        this.name = name
+        this.gameBoard = new GameBoard() 
+    }
+}
 class Ship {
     constructor(player = 'St John') {
         this.player = player;
