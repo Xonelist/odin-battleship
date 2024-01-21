@@ -5,11 +5,11 @@ class GameBoard {
         this.AttackedRecords = {}
     }
 
-    addShips(type, x, y, face = 'h') {
+    addShip(type, x, y, face = 'h') {
         
         if(x < 0 || x > 9 || y < 0 || y > 9) return false;
         if(`${x}, ${y}` in this.board) return false;
-        let ship = this.addShip(type);
+        let ship = this.addTypeShip(type);
         this.ships.push(ship);
         
         switch (face) {
@@ -20,7 +20,7 @@ class GameBoard {
                 
         }
     }
-    addShip(type) {
+    addTypeShip(type) {
         switch (type) {
             case 'P':
                 return new PatrolBoat()
@@ -81,6 +81,21 @@ class Player {
     constructor(name) {
         this.name = name
         this.gameBoard = new GameBoard() 
+    }
+
+    init() {
+        this.gameBoard.addShip('P', 4, 4)
+    }
+
+    attack(player, x, y) {
+        player.board.receiveAttack(x, y);
+    }
+}
+
+class ComputerAI extends Player {
+    constructor(name = 'AI Random') {
+        this.name = name;
+        this.gameBoard = new GameBoard()
     }
 }
 class Ship {
