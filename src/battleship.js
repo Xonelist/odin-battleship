@@ -5,11 +5,11 @@ class GameBoard {
         this.AttackedRecords = {}
     }
 
-    addShip(type, x, y, face = 'h') {
+    addShip(type, x, y, player = 'default', face = 'h') {
         
         if(x < 0 || x > 9 || y < 0 || y > 9) return false;
         if(`${x}, ${y}` in this.board) return false;
-        let ship = this.addTypeShip(type);
+        let ship = this.addTypeShip(type, player);
         this.ships.push(ship);
         
         switch (face) {
@@ -20,18 +20,18 @@ class GameBoard {
                 
         }
     }
-    addTypeShip(type) {
+    addTypeShip(type, player) {
         switch (type) {
             case 'P':
-                return new PatrolBoat()
+                return new PatrolBoat(player)
             case 'S':
-                return new Submarine()
+                return new Submarine(player)
             case 'D':
-                return new Destroyer()
+                return new Destroyer(player)
             case 'B':
-                return new Battleship()
+                return new Battleship(player)
             case 'C':
-                return new Carrier()
+                return new Carrier(player)
             default:
                 return false;
         }
@@ -84,18 +84,28 @@ class Player {
     }
 
     init() {
-        this.gameBoard.addShip('P', 4, 4)
+        this.gameBoard.addShip('P', 4, 4, this.name)
     }
 
     attack(player, x, y) {
-        player.board.receiveAttack(x, y);
+        return player.receiveAttack(x, y);
+    }
+
+    receiveAttack(x, y) {
+        return this.gameBoard.receiveAttack(x, y)
     }
 }
 
 class ComputerAI extends Player {
-    constructor(name = 'AI Random') {
-        this.name = name;
-        this.gameBoard = new GameBoard()
+    constructor(name) {
+        super(name)
+    }
+
+    attack(player) {
+        let x = Math.floor(Math.random()*10);
+        let y = Math.floor(Math.random()*10);
+
+        player.receiveAttack(x, y);
     }
 }
 class Ship {
@@ -160,4 +170,4 @@ class Carrier extends Ship {
     }
 }
 
-module.exports =  { Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier, GameBoard}
+module.exports =  { Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier, GameBoard, Player, ComputerAI}
