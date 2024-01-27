@@ -3,7 +3,12 @@ const { GameBoard } = require('./Gameboard');
 class Player {
     constructor(name) {
         this.name = name
-        this.gameBoard = new GameBoard() 
+        this.gameBoard = new GameBoard()
+        this.logsAttack = {} 
+    }
+
+    checkLogs(x, y) {
+        return this.logsAttack[`${x}${y}`] === undefined
     }
 
     init() {
@@ -11,11 +16,15 @@ class Player {
     }
 
     attack(player, x, y) {
-        return player.receiveAttack(x, y);
+        if(this.checkLogs(x, y)) return player.receiveAttack(x, y);
     }
 
     receiveAttack(x, y) {
         return this.gameBoard.receiveAttack(x, y)
+    }
+
+    isLost() {
+        return this.gameBoard.isAllShipSunk();
     }
 }
 
@@ -28,7 +37,7 @@ class ComputerAI extends Player {
         let x = Math.floor(Math.random()*10);
         let y = Math.floor(Math.random()*10);
 
-        player.receiveAttack(x, y);
+        return player.receiveAttack(x, y);
     }
 }
 

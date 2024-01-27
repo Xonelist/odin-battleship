@@ -4,7 +4,6 @@ class GameBoard {
     constructor() {
         this.board = {};
         this.ships = Array();
-        this.AttackedRecords = {}
     }
 
     addShip(type, x, y, player = 'default', face = 'h') {
@@ -58,8 +57,6 @@ class GameBoard {
     }
 
     receiveAttack(x, y) {
-        if(`${x}, ${y}` in this.AttackedRecords) return false;
-        this.AttackedRecords[`${x}, ${y}`] = true;
         if(`${x}, ${y}` in this.board) {
             return this.board[`${x}, ${y}`].hit();
         } else {
