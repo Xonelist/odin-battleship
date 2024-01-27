@@ -16,7 +16,10 @@ class Player {
     }
 
     attack(player, x, y) {
-        if(this.checkLogs(x, y)) return player.receiveAttack(x, y);
+        if(this.checkLogs(x, y)) {
+            this.logsAttack[`${x}${y}`] = true;
+            return player.receiveAttack(x, y);
+        }
     }
 
     receiveAttack(x, y) {
