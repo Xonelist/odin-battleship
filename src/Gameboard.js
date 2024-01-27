@@ -41,7 +41,7 @@ class GameBoard {
     addShipFaceHorizontal(x, y, ship) {
         if(x+ship.size > 9) return false;
         for(let i = x; i < x+ship.size; i++) {
-            this.board[`${i}, ${y}`] = ship;
+            this.board[`${i}${y}`] = ship;
         }
 
         return ship;
@@ -50,15 +50,15 @@ class GameBoard {
     addShipFaceVertical(x, y, ship) {
         if(y+ship.size > 9) return false;
         for(let i = y; i < y+ship.size; i++) {
-            this.board[`${x}, ${i}`] = ship;
+            this.board[`${x}${i}`] = ship;
         }
 
         return ship;
     }
 
     receiveAttack(x, y) {
-        if(`${x}, ${y}` in this.board) {
-            return this.board[`${x}, ${y}`].hit();
+        if(`${x}${y}` in this.board) {
+            return this.board[`${x}${y}`].hit();
         } else {
             return false;
         }

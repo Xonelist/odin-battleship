@@ -1,5 +1,6 @@
-const {Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier, GameBoard,Player, ComputerAI} = require('./battleship');
-
+const {Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier } = require('./battleship');
+const { Player, ComputerAI } = require('./player');
+const { GameBoard } = require('./Gameboard');
 
 //Ship class Test
     test('Scout name Patrol Boat', ()=> {
@@ -24,7 +25,7 @@ const {Ship, PatrolBoat, Submarine, Destroyer, Battleship, Carrier, GameBoard,Pl
 
 //Board class Test
 test('There is a ship at 0, 0', ()=> {
-    const cordinate = `0, 0`
+    const cordinate = `00`
     const board = new GameBoard()
     board.addShip('P', 0, 0);
     expect(board.board[cordinate].shipName).toBe('Patrol Boat')
@@ -37,11 +38,12 @@ test('Incoming attack on 0, 0 location (Hit)', ()=> {
 });
 
 test('Ship got hit twice in same location (total hit = 1)', ()=> {
-    const board = new GameBoard()
-    const ship = board.addShip('P', 0, 0);
-    board.receiveAttack(0, 0);
-    board.receiveAttack(0, 0);
-    expect(ship.totalHit).toBe(1);
+    const player = new Player('Player1')
+    const computer = new ComputerAI('computer')
+    computer.init()
+    player.attack(computer, 4, 4)
+    player.attack(computer, 4, 4)
+    expect(computer.gameBoard.board['44'].totalHit).toBe(1);
 });
 
 test('Incoming attack on 0, 1 location (miss)', ()=> {
