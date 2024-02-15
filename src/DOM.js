@@ -72,8 +72,11 @@ function logGame() {
 }
 
 function game() {
-    var player1 = new Player('Player1')
-    var player2 = new ComputerAI('ComputerAI')
+    const player1 = new Player('Player1')
+    const player2 = new Player('player2')
+
+    player1.init()
+    player2.init()
 
     const divBoard = document.querySelector('#divBoard')
     divBoard.appendChild(showBoard(player1.name))
@@ -83,24 +86,49 @@ function game() {
     let oppenentPlayer = player2;
 
     nextTurn(activePlayer, oppenentPlayer);
+    console.log('done')
 }
 
 function nextTurn(activePlayer, oppenentPlayer) {
+    let act = function(e) {
+        if(e.target.classList.contains('cell') && !e.target.classList.contains('attacked')) {
+            e.target.classList.add('attacked')
+            const cor = e.target.id
+            const table = document.querySelector(`table#${oppenentPlayer.name}`);
+            let hit = activePlayer.attack(oppenentPlayer, cor[1], cor[2])
+            if(hit) {
+                table.querySelector(`#c${cor[1]}${cor[2]}`).classList.add('hitted')
+                console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${cor[1]}, ${cor[2]}`)
+            };
+            table.removeEventListener('click', act)
+            nextTurn(oppenentPlayer, activePlayer);
+        }
+    }
+
+    let computerAct = function() {
+        let x = Math.floor(Math.random()*10);
+        let y = Math.floor(Math.random()*10);
+        while(!activePlayer.checkLogs(x, y)) {
+            console.log('reroll cordinate')
+            x = Math.floor(Math.random()*10);
+            y = Math.floor(Math.random()*10);
+        }
+
+        const table = document.querySelector(`table#${oppenentPlayer.name}`)
+        table.querySelector(`#c${x}${y}`).classList.add('attacked')
+        let hit = activePlayer.attack(oppenentPlayer, x, y)
+        if(hit) {
+            table.querySelector(`#c${x}${y}`).classList.add('hitted')
+            console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${x}, ${y}`)
+        };
+    }
+
     if (activePlayer.name === 'ComputerAI') {
-        activePlayer.attack(oppenentPlayer);
+        computerAct()
         nextTurn(oppenentPlayer, activePlayer);
     } else {
-        const cells = document.querySelectorAll('td.cell');
-        cells.forEach(cell => {
-            if(!cell.classList.contains('attacked')) {
-                
-                cell.addEventListener('click', (e) => {
-                    const cor = e.target.id
-                    activePlayer.attack(oppenentPlayer, cor[1], cor[2])
-                    nextTurn(oppenentPlayer, activePlayer)
-                }, {once: true})   
-            }         
-        });
+        const table = document.querySelector(`table#${oppenentPlayer.name}`);                
+        table.addEventListener('click', act)          
     }
 }
 
