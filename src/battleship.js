@@ -7,7 +7,7 @@ class Ship {
 
     hit() {
         this.totalHit += 1
-        return `${this.player}'s ${this.shipName} got hit`
+        return this.shipName
     }
 
     isSunk() {
