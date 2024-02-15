@@ -16,6 +16,7 @@ class Player {
     }
 
     attack(player, x, y) {
+        console.log(`${this.name} attack ${player.name} ${x}, ${y}`)
         if(this.checkLogs(x, y)) {
             this.logsAttack[`${x}${y}`] = true;
             return player.receiveAttack(x, y);
@@ -32,14 +33,12 @@ class Player {
 }
 
 class ComputerAI extends Player {
-    constructor(name) {
-        super(name)
-    }
 
-    attack(player) {
-        let x = Math.floor(Math.random()*10);
-        let y = Math.floor(Math.random()*10);
-
+    attack(player,x,y) {
+        //let x = Math.floor(Math.random()*10);
+        //let y = Math.floor(Math.random()*10);
+        console.log(`${this.name} attack ${player.name} ${x}, ${y}`)
+        this.logsAttack[`${x}${y}`] = true;
         return player.receiveAttack(x, y);
     }
 }
