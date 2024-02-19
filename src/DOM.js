@@ -21,17 +21,22 @@ function mainmenu(player1, player2) {
 }
 
 function maingame() {
-    const body = document.body
-    const main = document.createElement('main')
-    const divHead = document.createElement('div')
-    divHead.id = 'divHead'
-    const divBody = document.createElement('div')
-    divBody.id = 'divBody'
-    const divFoot = document.createElement('div')
-    divFoot.id = 'divFoot'
+    const body = document.body;
+    const main = document.createElement('main');
+    const divHead = document.createElement('div');
+    divHead.id = 'divHead';
+    const divBody = document.createElement('div');
+    divBody.id = 'divBody';
+    const divFoot = document.createElement('div');
+    divFoot.id = 'divFoot';
     const divBoard = document.createElement('div');
     divBoard.id = 'divBoard';
+    const divTurn = document.createElement('h2');
+    divTurn.id = 'divTurn';
+    const divLogs = document.createElement('div');
+    divLogs.id = 'divLogs'
 
+    divHead.appendChild(divTurn)
     divBody.appendChild(divBoard)
 
     main.appendChild(divHead)
@@ -61,19 +66,19 @@ function showBoard(playerName) {
 
 //player turns display
 function turnBoards(playerName) {
-    const head = document.querySelector('#divHead');
-    const headline = document.createElement('h3');
-    headline.textContent = playerName;
+    const divTurn = document.querySelector('#divTurn')
+    divTurn.textContent = `Now is ${playerName}'s turn`;
 }
 
 //players logs 
 function logGame() {
-    const log = document.createElement('div')
+    const divLogs = document.querySelector('#divLogs');
+
 }
 
 function game() {
     const player1 = new Player('Player1')
-    const player2 = new Player('player2')
+    const player2 = new Player('Player2')
 
     player1.init()
     player2.init()
@@ -86,7 +91,6 @@ function game() {
     let oppenentPlayer = player2;
 
     nextTurn(activePlayer, oppenentPlayer);
-    console.log('done')
 }
 
 function nextTurn(activePlayer, oppenentPlayer) {
@@ -95,10 +99,11 @@ function nextTurn(activePlayer, oppenentPlayer) {
             e.target.classList.add('attacked')
             const cor = e.target.id
             const table = document.querySelector(`table#${oppenentPlayer.name}`);
+            table.classList.remove('active')
             let hit = activePlayer.attack(oppenentPlayer, cor[1], cor[2])
             if(hit) {
                 table.querySelector(`#c${cor[1]}${cor[2]}`).classList.add('hitted')
-                console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${cor[1]}, ${cor[2]}`)
+                console.log(`${oppenentPlayer.name}'s ${hit.shipName} got hit at ${cor[1]}, ${cor[2]}`)
             };
             table.removeEventListener('click', act)
             nextTurn(oppenentPlayer, activePlayer);
@@ -123,13 +128,21 @@ function nextTurn(activePlayer, oppenentPlayer) {
         };
     }
 
+    turnBoards(activePlayer.name)
+
     if (activePlayer.name === 'ComputerAI') {
         computerAct()
         nextTurn(oppenentPlayer, activePlayer);
     } else {
         const table = document.querySelector(`table#${oppenentPlayer.name}`);                
+        table.classList.add('active');
         table.addEventListener('click', act)          
     }
+}
+
+function gameOver() {
+
+
 }
 
 export { mainmenu, showBoard, maingame }
