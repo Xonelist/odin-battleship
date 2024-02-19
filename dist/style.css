@@ -1,0 +1,26 @@
+table {
+    height: 250px;
+    width: 50%;
+    border: 1px solid silver;
+}
+td {
+    min-width: 30%;
+    border: 1px solid black;
+}
+
+#divBoard {
+    display: flex;
+    gap: 50px;
+}
+
+.attacked {
+    background-color: red;
+}
+
+.hitted {
+    background-color: yellowgreen;
+}
+
+.active {
+    border: 1px solid black;
+}
