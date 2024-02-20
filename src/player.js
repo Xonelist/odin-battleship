@@ -11,6 +11,10 @@ class Player {
         return this.gameBoard.getBoard();
     }
 
+    getLog() {
+        return this.logsAttack
+    }
+
     checkLogs(x, y) {
         return this.logsAttack[`${x}${y}`] === undefined
     }

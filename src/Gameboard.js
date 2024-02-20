@@ -75,6 +75,10 @@ class GameBoard {
 
         //return true;
     }
+
+    getBoard () {
+        return this.board
+    }
 }
 
 module.exports = { GameBoard }
