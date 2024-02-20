@@ -6,6 +6,10 @@ class Player {
         this.gameBoard = new GameBoard()
         this.logsAttack = {} 
     }
+    
+    getBoard() {
+        return this.gameBoard.getBoard();
+    }
 
     checkLogs(x, y) {
         return this.logsAttack[`${x}${y}`] === undefined
@@ -30,6 +34,8 @@ class Player {
     isLost() {
         return this.gameBoard.isAllShipSunk();
     }
+
+    
 }
 
 class ComputerAI extends Player {
