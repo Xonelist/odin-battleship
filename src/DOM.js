@@ -1,11 +1,11 @@
 import { ComputerAI, Player } from "./player";
+import { renderBoard } from "./renderBoard";
 
-function mainmenu(player1, player2) {
+function mainmenu() {
     const div = document.createElement('div');
     const introduction = document.createElement('h1');
     introduction.className = 'Intro-title'
     introduction.textContent = 'Welcome to Battleship Game !'
-    let _wait = true;
     const startbutton = document.createElement('button');
     startbutton.textContent = 'Start Game'
 
@@ -48,8 +48,10 @@ function maingame() {
 
 //return board with form of table
 function showBoard(playerName) {
-    const table = document.createElement('table');
-    table.id = playerName
+    const divTable = document.createElement('div');
+    const tableTitle = document.createElement('h2');
+    const tableBoard = document.createElement('table');
+    tableBoard.id = playerName
     for(let i= 0; i < 10; i++) {
         const row = document.createElement('tr');
         for(let j = 0; j < 10; j++) {
@@ -58,10 +60,16 @@ function showBoard(playerName) {
             col.classList = 'cell'
             row.appendChild(col)
         }
-        table.insertBefore(row, table.firstChild);
+        tableBoard.insertBefore(row, tableBoard.firstChild);
     }
 
-    return table;
+    tableTitle.textContent = `${playerName}'s board`
+
+    divTable.id = 'divTable'
+    divTable.appendChild(tableTitle);
+    divTable.appendChild(tableBoard);
+    
+    return divTable;
 }
 
 //player turns display
@@ -78,7 +86,7 @@ function logGame() {
 
 function game() {
     const player1 = new Player('Player1')
-    const player2 = new Player('Player2')
+    const player2 = new ComputerAI('ComputerAI')
 
     player1.init()
     player2.init()
@@ -96,7 +104,7 @@ function game() {
 function nextTurn(activePlayer, oppenentPlayer) {
     let act = function(e) {
         if(e.target.classList.contains('cell') && !e.target.classList.contains('attacked')) {
-            e.target.classList.add('attacked')
+            //e.target.classList.add('attacked')
             const cor = e.target.id
             const table = document.querySelector(`table#${oppenentPlayer.name}`);
             table.classList.remove('active')
@@ -106,6 +114,7 @@ function nextTurn(activePlayer, oppenentPlayer) {
                 console.log(`${oppenentPlayer.name}'s ${hit.shipName} got hit at ${cor[1]}, ${cor[2]}`)
             };
             table.removeEventListener('click', act)
+            renderBoard(activePlayer, oppenentPlayer, true)
             nextTurn(oppenentPlayer, activePlayer);
         }
     }
@@ -120,20 +129,24 @@ function nextTurn(activePlayer, oppenentPlayer) {
         }
 
         const table = document.querySelector(`table#${oppenentPlayer.name}`)
-        table.querySelector(`#c${x}${y}`).classList.add('attacked')
+        //table.querySelector(`#c${x}${y}`).classList.add('attacked')
         let hit = activePlayer.attack(oppenentPlayer, x, y)
         if(hit) {
             table.querySelector(`#c${x}${y}`).classList.add('hitted')
             console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${x}, ${y}`)
         };
+        //renderBoard(activePlayer, oppenentPlayer, true)
     }
 
+    
     turnBoards(activePlayer.name)
+    
 
     if (activePlayer.name === 'ComputerAI') {
         computerAct()
         nextTurn(oppenentPlayer, activePlayer);
     } else {
+        renderBoard(activePlayer, oppenentPlayer)
         const table = document.querySelector(`table#${oppenentPlayer.name}`);                
         table.classList.add('active');
         table.addEventListener('click', act)          
