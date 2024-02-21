@@ -23,6 +23,7 @@ function mainmenu() {
 function maingame() {
     const body = document.body;
     const main = document.createElement('main');
+    main.id = 'mainGame'
     const divHead = document.createElement('div');
     divHead.id = 'divHead';
     const divBody = document.createElement('div');
@@ -153,9 +154,12 @@ function nextTurn(activePlayer, oppenentPlayer) {
     }
 }
 
-function gameOver() {
+function gameOver(winnerPlayer) {
+    const main = document.querySelector('#mainGame');
+    const divGameOver = document.createElement('div');
+    const buttonTryAgain = document.createElement('button');
 
-
+    document.body.removeChild(main);
 }
 
 export { mainmenu, showBoard, maingame }
