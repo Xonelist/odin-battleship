@@ -116,7 +116,12 @@ function nextTurn(activePlayer, oppenentPlayer) {
             };
             table.removeEventListener('click', act)
             renderBoard(activePlayer, oppenentPlayer, true)
-            nextTurn(oppenentPlayer, activePlayer);
+
+            if(oppenentPlayer.isLost()) {
+                gameOver();
+            } else {
+                nextTurn(oppenentPlayer, activePlayer);
+            }
         }
     }
 
