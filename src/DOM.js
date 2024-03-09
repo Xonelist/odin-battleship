@@ -39,6 +39,7 @@ function maingame() {
 
     divHead.appendChild(divTurn)
     divBody.appendChild(divBoard)
+    divFoot.appendChild(divLogs)
 
     main.appendChild(divHead)
     main.appendChild(divBody)
@@ -80,11 +81,34 @@ function turnBoards(playerName) {
 }
 
 //players logs 
-function logGame() {
+function logGame(activePlayer, oppenentPlayer, action, object) {
+    //object lib [turn, x, y, ship]
+    const log = function() {
+        switch (action) {
+            case 'attack':
+                return `${activePlayer.name} attack area X-${object[1]} , Y-${object[2]}`
+            
+            case 'hit':
+                return `${activePlayer.name} attack area X-${object[1]} , Y-${object[2]} and hit ${oppenentPlayer.name}'s ${object[3]}`
+            
+            case 'winner':
+                return `The Winner is ${activePlayer.name}`;
+         
+            default:
+                return `Something is wrong in this code`
+         }
+    }
     const divLogs = document.querySelector('#divLogs');
+    const p = document.createElement('p');
+    p.textContent =  `turn ${object[0]} >> ${log()}`
+    divLogs.appendChild(p)
 
+    //update scroll to be bottom
+    divLogs.scrollTop = divLogs.scrollHeight - divLogs.clientHeight
 }
 
+
+//game
 function game() {
     const player1 = new Player('Player1')
     const player2 = new ComputerAI('ComputerAI')
@@ -98,29 +122,34 @@ function game() {
 
     let activePlayer = player1;
     let oppenentPlayer = player2;
-
-    nextTurn(activePlayer, oppenentPlayer);
+    let turn = 1
+    nextTurn(activePlayer, oppenentPlayer, turn);
 }
 
-function nextTurn(activePlayer, oppenentPlayer) {
+function nextTurn(activePlayer, oppenentPlayer, turn) {
     let act = function(e) {
         if(e.target.classList.contains('cell') && !e.target.classList.contains('attacked')) {
             //e.target.classList.add('attacked')
-            const cor = e.target.id
+                //x = x ; y = y
+            const x = e.target.id[1]
+            const y = e.target.id[2]
             const table = document.querySelector(`table#${oppenentPlayer.name}`);
             table.classList.remove('active')
-            let hit = activePlayer.attack(oppenentPlayer, cor[1], cor[2])
+            let hit = activePlayer.attack(oppenentPlayer, x, y)
             if(hit) {
-                table.querySelector(`#c${cor[1]}${cor[2]}`).classList.add('hitted')
-                console.log(`${oppenentPlayer.name}'s ${hit.shipName} got hit at ${cor[1]}, ${cor[2]}`)
+                table.querySelector(`#c${x}${y}`).classList.add('hitted')
+                logGame(activePlayer, oppenentPlayer, 'hit', [turn, x, y, hit.shipName]);
+            } else {
+                logGame(activePlayer, oppenentPlayer, 'attack', [turn, x, y, null]);
             };
+            
             table.removeEventListener('click', act)
             renderBoard(activePlayer, oppenentPlayer, true)
 
             if(oppenentPlayer.isLost()) {
-                gameOver();
+                logGame(activePlayer, oppenentPlayer, 'winner', [turn])
             } else {
-                nextTurn(oppenentPlayer, activePlayer);
+                nextTurn(oppenentPlayer, activePlayer, turn+1);
             }
         }
     }
@@ -139,7 +168,10 @@ function nextTurn(activePlayer, oppenentPlayer) {
         let hit = activePlayer.attack(oppenentPlayer, x, y)
         if(hit) {
             table.querySelector(`#c${x}${y}`).classList.add('hitted')
-            console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${x}, ${y}`)
+            //console.log(`${oppenentPlayer.name}'s ${hit} got hit at ${x}, ${y}`)
+            logGame(activePlayer, oppenentPlayer, 'hit', [turn, x, y, hit.shipName]);
+        } else {
+            logGame(activePlayer, oppenentPlayer, 'attack', [turn, x, y, null]);
         };
         //renderBoard(activePlayer, oppenentPlayer, true)
     }
@@ -150,7 +182,11 @@ function nextTurn(activePlayer, oppenentPlayer) {
 
     if (activePlayer.name === 'ComputerAI') {
         computerAct()
-        nextTurn(oppenentPlayer, activePlayer);
+        if(oppenentPlayer.isLost()) {
+            logGame(activePlayer, oppenentPlayer, 'winner', [turn])
+        } else {
+            nextTurn(oppenentPlayer, activePlayer, turn+1);
+        }
     } else {
         renderBoard(activePlayer, oppenentPlayer)
         const table = document.querySelector(`table#${oppenentPlayer.name}`);                
@@ -160,11 +196,17 @@ function nextTurn(activePlayer, oppenentPlayer) {
 }
 
 function gameOver(winnerPlayer) {
-    const main = document.querySelector('#mainGame');
+    //const main = document.querySelector('#mainGame');
+    const divFoot = document.querySelector('#divFoot')
     const divGameOver = document.createElement('div');
     const buttonTryAgain = document.createElement('button');
 
-    document.body.removeChild(main);
+    const winnerShow = document.createElement('h1');
+    winnerShow.textContent = winnerPlayer.name
+    
+    divGameOver.appendChild(winnerShow);
+    divFoot.appendChild(divGameOver)
+    //document.body.removeChild(main);
 }
 
 export { mainmenu, showBoard, maingame }
