@@ -1,13 +1,12 @@
 //active player board rendering (own ship visible on own board and attack visible on oppenent board)
 function renderBoard(activePlayer, oppenentPlayer, remove = false) {
     //add or rmv player's cellXY class
-    let add = function(key, className, tablePlayer) {
-        console.log(tablePlayer)
-        tablePlayer.querySelector(`#c${key}`).classList.add(`${className}`)
+    const add = function(id, className, tablePlayer) {
+        tablePlayer.querySelector(id).classList.add(`${className}`)
     }
 
-    let rmv = function(key, className, tablePlayer) {
-        tablePlayer.querySelector(`#c${key}`).classList.remove(`${className}`)
+    const rmv = function(id, className, tablePlayer) {
+        tablePlayer.querySelector(id).classList.remove(`${className}`)
     }
 
     //call default is add, if remove is true call will use rmv function
@@ -24,15 +23,17 @@ function renderBoard(activePlayer, oppenentPlayer, remove = false) {
     const tableOppenentPlayer = document.querySelector(`table#${oppenentPlayer.name}`)
 
     Object.keys(activePlayerBoard).forEach((key) => {
-        call(key, 'ship', tableActivePlayer)
+        call(`#c${key}`, 'ship', tableActivePlayer)
     })
 
     Object.keys(activePlayerAttackLog).forEach((key) => {
-        call(key, 'attacked', tableOppenentPlayer)
+        call(`#c${key}`, 'attacked', tableOppenentPlayer)
     })
     Object.keys(oppenentPlayerAttackLog).forEach((key) => {
-        call(key, 'crossed', tableActivePlayer)
+        call(`#c${key}`, 'crossed', tableActivePlayer)
     })
+
+    return true;
 }
 
 module.exports = {renderBoard}
