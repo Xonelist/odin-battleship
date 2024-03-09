@@ -24,7 +24,7 @@ class Player {
     }
 
     attack(player, x, y) {
-        console.log(`${this.name} attack ${player.name} ${x}, ${y}`)
+        //console.log(`${this.name} attack ${player.name} ${x}, ${y}`)
         if(this.checkLogs(x, y)) {
             this.logsAttack[`${x}${y}`] = true;
             return player.receiveAttack(x, y);
